@@ -1,18 +1,19 @@
 class Solution:
     def getCommon(self, nums1: List[int], nums2: List[int]) -> int:
-        # for i in range(len(nums1)):
-        #     # key = nums[i]
-        #     low = 0
-        #     high = len(nums2)-1
-        #     while low <= high :
-        #         mid = (low+high)//2
-        #         if nums2[mid] == nums1[i] :
-        #             return nums2[mid]
-        #         elif nums2[mid] > nums1[i] :
-        #             high = mid-1
-        #         else :
-        #             low = mid+1
-        # return -1
+        # Binary Search Solution
+        for i in range(len(nums1)):
+            # key = nums[i]
+            low = 0
+            high = len(nums2)-1
+            while low <= high :
+                mid = (low+high)//2
+                if nums2[mid] == nums1[i] :
+                    return nums2[mid]
+                elif nums2[mid] > nums1[i] :
+                    high = mid-1
+                else :
+                    low = mid+1
+        return -1
     
         # Two pointer solution
         i = 0
