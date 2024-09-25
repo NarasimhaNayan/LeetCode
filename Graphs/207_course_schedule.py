@@ -28,7 +28,10 @@ prerequisites[i].length == 2
 0 <= ai, bi < numCourses
 All the pairs prerequisites[i] are unique.
 """
+
+# Better to do with BFS
 from typing import List
+from collections import deque
 class Solution:
 
     def topological_sort(self,node,visited,stack,adj):
@@ -62,42 +65,51 @@ class Solution:
         adj[course] = []
         return True
 
+    def bfs(self, queue, adj, indegree):
+        while len(queue)>0:
+            ele = queue.popleft()
+
+            for adj_node in adj[ele] :
+                indegree[adj_node] -= 1
+                if indegree[adj_node] == 0:
+                    queue.append(adj_node)
         
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         # pre_req has the edge a1-> b1
         # Draw graph based on the edgesand create adj list.
         adj = {}
+        indegree = [0]*numCourses
         for i in range(numCourses):
             adj[i] = []
         for i,j in prerequisites :
             if i in adj:
-                adj[i].append(j)
-        #     else:
-        #         temp = []
-        #         temp.append(j)
-        #         adj[i] = temp
-
-        # for i in range(numCourses):
-        #     if i not in adj :
-        #         temp = []
-        #         adj[i] = temp
-
-        print(adj)
+                adj[j].append(i)
+                indegree[i] += 1
 
         # Apply topological sorting on this adj list
         # Initialization
-        stack = []
-        visited = [0]*numCourses
-
-        visited_courses = set()
+        # visited_courses = set()
 
         # Apply DFS
-        for course in range(numCourses) :
-            # if visited[i] == 0 :
-            if not self.dfs(course,visited_courses,adj):
-                return False    
-        return True
+        # for course in range(numCourses) :
+        #     # if visited[i] == 0 :
+        #     if not self.dfs(course,visited_courses,adj):
+        #         return False    
+        # return True
+    
+        # BFS implementation:
+        queue = deque()
+        for i in range(len(indegree)):
+            if indegree[i] == 0:
+                queue.append(i)
+        
+        for i in range(numCourses):
+            self.bfs(queue,adj,indegree)
 
+        for i in range(len(indegree)):
+            if indegree[i] != 0 :
+                return False
+        return True
 
 def main() :
     solution = Solution()

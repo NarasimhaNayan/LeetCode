@@ -34,6 +34,7 @@ All the pairs [ai, bi] are distinct.
 """
 
 from typing import List
+from collections import deque
 class Solution:
     # Core logic:
     # 1. Check if the graph has any cycles
@@ -58,35 +59,65 @@ class Solution:
         stack.append(course)
         adj[course] = []
         return True
+    
+    def bfs(self,adj,indegree,queue,result):
+        while len(queue) > 0 :
+            ele = queue.popleft()
+            result.append(ele)
+
+            for adj_node in adj[ele]:
+                indegree[adj_node] -= 1
+
+                if indegree[adj_node] == 0:
+                    queue.append(adj_node)
 
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
         # Creating adjacency list
         adj = {}
+        indegree = [0]*numCourses
         for i in range(numCourses):
             adj[i] = []
         for course, prereq in prerequisites:
             adj[prereq].append(course)
+            indegree[course] += 1
 
-        print(adj)
+        # print(adj)
 
         # Initialization
-        # Have a visited set to detect cycle
-        cycle_set = set() 
-        # Visited_arr to mark the visited nodes
-        # visited_arr = [0]*numCourses
-        # Stack to keep the track of nodes visited
-        stack = []
-        # To store the result
+        # # Have a visited set to detect cycle
+        # cycle_set = set() 
+        # # Visited_arr to mark the visited nodes
+        # # visited_arr = [0]*numCourses
+        # # Stack to keep the track of nodes visited
+        # stack = []
+        # # To store the result
+        # result = []
+
+        # # DFS on all the non-visited nodes
+        # for course in range(numCourses):
+        #         # Check for cycles. If cycle exists return empty list
+        #         if not self.dfs(course,cycle_set,stack,adj):
+        #             return []
+
+        # while len(stack) > 0:
+        #     result.append(stack.pop())
+        # return result
+
+        # BFS Implementation
+        queue = deque()
         result = []
+        for i in range(len(indegree)):
+            if indegree[i] == 0 :
+                queue.append(i)
+                # result.append(i)
 
-        # DFS on all the non-visited nodes
-        for course in range(numCourses):
-                # Check for cycles. If cycle exists return empty list
-                if not self.dfs(course,cycle_set,stack,adj):
-                    return []
+        for i in range(numCourses):
+            self.bfs(adj, indegree,queue, result)
 
-        while len(stack) > 0:
-            result.append(stack.pop())
+        for i in range(len(indegree)) :
+            # Detect a cycle. if indegree != 0 => that node has incoming edge inspite of complete traversal.
+            if indegree[i] != 0:
+                return []
         return result
         
 
