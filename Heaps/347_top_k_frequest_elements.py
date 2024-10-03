@@ -1,0 +1,61 @@
+"""
+Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+
+Example 1:
+
+Input: nums = [1,1,1,2,2,3], k = 2
+Output: [1,2]
+Example 2:
+
+Input: nums = [1], k = 1
+Output: [1]
+ 
+
+Constraints:
+
+1 <= nums.length <= 105
+-104 <= nums[i] <= 104
+k is in the range [1, the number of unique elements in the array].
+It is guaranteed that the answer is unique.
+ 
+
+Follow up: Your algorithm's time complexity must be better than O(n log n), where n is the array's size.
+"""
+import heapq
+from typing import List
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        if k > len(nums) :
+            return []
+        heap = []
+        hashmap = {}
+        for num in nums:
+            if num in hashmap:
+                hashmap[num] += 1
+            else:
+                hashmap[num] = 1
+        
+        for key,val in hashmap.items():
+            heapq.heappush(heap,(key,-val))
+
+        if k > len(heap):
+            return []
+
+        res = []
+        i=0
+        while i < k:
+            key,val = heapq.heappop(heap)
+            res.append(key)
+            i+=1
+        return res
+    
+def main():
+    solution = Solution()
+    nums = [1,1,1,2,2,3]
+    k = 2
+    res = solution.topKFrequent(nums,k)
+    print(res)
+
+if __name__  == "__main__":
+    main()
+
