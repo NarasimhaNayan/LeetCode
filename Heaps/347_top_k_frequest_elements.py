@@ -36,7 +36,7 @@ class Solution:
                 hashmap[num] = 1
         
         for key,val in hashmap.items():
-            heapq.heappush(heap,(key,-val))
+            heapq.heappush(heap,(-val,key))
 
         if k > len(heap):
             return []
@@ -44,7 +44,7 @@ class Solution:
         res = []
         i=0
         while i < k:
-            key,val = heapq.heappop(heap)
+            val,key = heapq.heappop(heap)
             res.append(key)
             i+=1
         return res
